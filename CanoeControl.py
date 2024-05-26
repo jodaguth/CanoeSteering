@@ -98,29 +98,33 @@ class ThrottleModule ():
         return self.data
         
 class MotorThrottleModule ():
-    def __init__(self,PWMM,FW,BW) -> None:
-        self.PWMT = Pin(PWMM)
-        self.PWM = PWM(self.PWMT) 
-        self.FW_Pin = Pin(FW,Pin.OUT)
-        self.BW_Pin = Pin(BW,Pin.OUT)
-        self.PWM.freq(15000)
-        self.PWM.duty(0)
-    
+    def __init__(self,EN,PWMMFW,PWMMBW) -> None:
+        self.PWMTFW = Pin(PWMMFW)
+        self.PWMTBW = Pin(PWMMBW)
+        self.PWMFW = PWM(self.PWMTFW)
+        self.PWMBW = PWM(self.PWMTBW)
+        self.EN_Pin = Pin(EN,Pin.OUT)
+
+        self.PWMFW.freq(15000)
+        self.PWMFW.duty(0)
+        self.PWMBW.freq(15000)
+        self.PWMBW.duty(0)
+
     def process (self,data):
         if data[1] == 0:
-            self.PWM.duty(0)
-            self.BW_Pin.value(0)
-            self.FW_Pin.value(0)
+            self.PWMBW.duty(0)
+            self.PWMFW.duty(0)
+            self.EN_Pin.value(0)
         elif data[1] == 1:
-            self.BW_Pin.value(0)
-            self.FW_Pin.value(1)
             duty = round(map_range(data[0],0,100,0,1023,F=False))
-            self.PWM.duty(duty)
+            self.PWMBW.duty(0)
+            self.EN_Pin.value(1)
+            self.PWMFW.duty(duty)
         elif data[1] == 2:
-            self.BW_Pin.value(1)
-            self.FW_Pin.value(0)
             duty = round(map_range(data[0],0,100,0,1023,F=False))
-            self.PWM.duty(duty)
+            self.PWMFW.duty(0)
+            self.EN_Pin.value(1)
+            self.PWMBW.duty(duty)
 
 class StepperSteeringModule:
     def __init__(self,en_pin,step_pin,dir_pin,steps_per_second=6400,step_rotation=200,microstep = 1):
