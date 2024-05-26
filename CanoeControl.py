@@ -104,6 +104,7 @@ class MotorThrottleModule ():
         self.PWMFW = PWM(self.PWMTFW)
         self.PWMBW = PWM(self.PWMTBW)
         self.EN_Pin = Pin(EN,Pin.OUT)
+        self.EN_Pin.value(0)
 
         self.PWMFW.freq(15000)
         self.PWMFW.duty(0)
