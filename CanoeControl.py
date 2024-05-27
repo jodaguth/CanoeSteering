@@ -117,12 +117,12 @@ class MotorThrottleModule ():
             self.PWMFW.duty(0)
             self.EN_Pin.value(0)
         elif data[1] == 1:
-            duty = round(map_range(data[0],0,100,0,1023,F=False))
+            duty = round(map_range(data[0],0,100,1,1023,F=False))
             self.PWMBW.duty(0)
             self.EN_Pin.value(1)
             self.PWMFW.duty(duty)
         elif data[1] == 2:
-            duty = round(map_range(data[0],0,100,0,1023,F=False))
+            duty = round(map_range(data[0],0,100,1,1023,F=False))
             self.PWMFW.duty(0)
             self.EN_Pin.value(1)
             self.PWMBW.duty(duty)
