@@ -2,7 +2,8 @@ import ESPControl
 import CanoeControl
 import utime
 esp = ESPControl.espconnect('Console')
-
+print('Steering Disconnected')
+print('Throttle Disconnected')
 while True:
     if esp.Peripherals['Steering']['Connected'] == False:
         esp.connect('Steering')
