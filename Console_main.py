@@ -24,7 +24,7 @@ while True:
     ctime = utime.ticks_ms()
     dtime = utime.ticks_diff(ctime, ptime)
     if Steering.process():
-        if dtime >= 100:
+        if dtime >= 25:
             esp.send('Steering',Steering.return_data())
             ptime = utime.ticks_ms()
     if Throttle.process():
