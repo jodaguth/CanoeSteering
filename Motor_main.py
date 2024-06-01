@@ -1,18 +1,15 @@
 import CanoeControl
-import ESPControl
-import LEDControl
+import Esp32Now
 
-Led = LEDControl.LEDBLINK()
 
-esp = ESPControl.espconnect('Throttle')
 
+
+esp = Esp32Now.Peripheral('Throttle')
+esp.Connect()
 Motor = CanoeControl.MotorThrottleModule(0,1,3)
 
 while True:
-    Led.process()
-    data = esp.recieve()
-    if esp.Peripherals['Console']['Connected'] == True:
-        Led.freq(2)
+    data = esp.listen()
     if data != None:
         Motor.process(data)
 

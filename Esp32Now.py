@@ -42,6 +42,8 @@ class Peripheral():
         def Connect(self):
             if self.Connect_Data['Console']['Mac'] == None:
                 self.pair()
+            else:
+                self.e.add_peer(self.Connect_Data['Console']['Mac'])
             self.Ptime = utime.ticks_ms()                  
 
         def listen(self):

@@ -1,6 +1,6 @@
-from machine import Pin,PWM,Timer
-import utime
-import micropython
+from machine import Pin,PWM,Timer # type: ignore
+import utime # type: ignore
+import micropython # type: ignore
 
 def map_range(x, in_min, in_max, out_min, out_max,F=True):
     if F:
