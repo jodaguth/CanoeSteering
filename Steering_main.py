@@ -11,6 +11,7 @@ stepper_motor.track_target()
 stepper_target = 0
 stepper_set = 0
 esp.Connect()
+print('Run')
 while True:
 
 ####### recieve data ###########################################################
