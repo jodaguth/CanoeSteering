@@ -20,8 +20,8 @@ class Peripheral():
             x = file.read()
             self.Connect_Data = ujson.loads(x)
             for x in self.Connect_Data:
-                if x['Mac'] != None:
-                     self.e.add_peer(x['Mac'])
+                if self.Connect_Data[x]['Mac'] != None:
+                     self.e.add_peer(self.Connect_Data[x]['Mac'])
             file.close()
             
 
@@ -37,7 +37,6 @@ class Peripheral():
                     file = open("Values.json","w")
                     file.write(ujson.dumps(self.Connect_Data))
                     file.close()
-
                     break
 
         def Connect(self):
@@ -70,6 +69,26 @@ class Host():
         x = file.read()
         self.Connect_Data = ujson.loads(x)
         for x in self.Connect_Data:
-            if x['Mac'] != None:
-                self.e.add_peer(x['Mac'])
+            if self.Connect_Data[x]['Mac'] != None:
+                self.e.add_peer(self.Connect_Data[x]['Mac'])
         file.close()
+    
+    def listen(self):
+        mac,msg = self.e.recv()
+        if msg != None:
+            rmsg = ujson.dumps(msg)
+            if rmsg[0] == 'Broadcast':
+                self.Connect_Data[rmsg[1]]['Mac'] = mac
+
+    def send(self):
+        for x in self.Connect_Data:
+            if x != 'Console':
+                if self.Connect_Data[x]['Data'] != None:
+                    self.e.send(self.Connect_Data[x]['Mac'],self.Connect_Data[x]['Data'])
+
+    def HeartBeat(self):
+        self.listen()
+        self.send()
+
+    def Start_Coms(self):
+        pass
