@@ -1,8 +1,8 @@
-import network
-import espnow
+import network # type: ignore
+import espnow # type: ignore
 import ujson
-from machine import Timer
-import utime 
+from machine import Timer # type: ignore
+import utime  # type: ignore
 
 
 class Peripheral():
@@ -79,16 +79,25 @@ class Host():
             rmsg = ujson.dumps(msg)
             if rmsg[0] == 'Broadcast':
                 self.Connect_Data[rmsg[1]]['Mac'] = mac
+                self.Connect_Data[rmsg[1]]['Status'] = True
 
     def send(self):
         for x in self.Connect_Data:
             if x != 'Console':
                 if self.Connect_Data[x]['Data'] != None:
                     self.e.send(self.Connect_Data[x]['Mac'],self.Connect_Data[x]['Data'])
+                    mac,msg = self.e.recv()
+                    if msg != None:
+                        data = ujson.dumps(msg)
+                        if data == 'Recieved':
+                            self.Connect_Data[x]['Status'] = True
+                    else:
+                        self.Connect_Data[x]['Status'] = False       
 
     def HeartBeat(self):
         self.listen()
         self.send()
 
     def Start_Coms(self):
-        pass
+        tim = Timer(3)
+        tim.init(mode=Timer.PERIODIC, freq=200, callback=self.heartbeat)
