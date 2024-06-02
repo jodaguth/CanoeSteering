@@ -15,13 +15,15 @@ class Peripheral():
             self.device = device_type
             self.data = None
             self.console_status = False
-            self.Ptime = utime.tick_ms()
+            self.Ptime = utime.ticks_ms()
             file = open("Values.json","r")
             x = file.read()
-            self.Connect_Data = ujson.loads(x)
+            xt = ujson.loads(x)
+            self.Connect_Data = xt[0]
             for x in self.Connect_Data:
-                if self.Connect_Data[x]['Mac'] != None:
-                     self.e.add_peer(self.Connect_Data[x]['Mac'])
+                read = self.Connect_Data[x]['Mac']
+                if read != None:
+                     self.e.add_peer(read)
             file.close()
             
 
@@ -69,17 +71,21 @@ class Host():
         self.e.add_peer(b'\xff\xff\xff\xff\xff\xff')
         file = open("Values.json","r")
         x = file.read()
-        self.Connect_Data = ujson.loads(x)
+        utime.sleep(.1)
+        xt = ujson.loads(x)
+        utime.sleep(.1)
+        self.Connect_Data = xt[0]
         for x in self.Connect_Data:
-            if self.Connect_Data[x]['Mac'] != None:
-                self.e.add_peer(self.Connect_Data[x]['Mac'])
+            read = self.Connect_Data[x]['Mac']
+            if read != None:
+                self.e.add_peer(read)
         file.close()
     
     def listen(self):
         mac,msg = self.e.recv()
         if msg != None:
-            rmsg = ujson.dumps(msg)
-            if rmsg[0] == 'Broadcast':
+            rmsg = ujson.loads(msg)
+            if rmsg[0] == 'BroadCast':
                 self.Connect_Data[rmsg[1]]['Mac'] = mac
                 self.e.add_peer(mac)
                 self.Connect_Data[rmsg[1]]['Status'] = True
@@ -100,10 +106,11 @@ class Host():
     def HeartBeat(self,r):
         self.send()
         self.listen()
+        utime.sleep(.2)
 
     def Start_Coms(self):
-        tim = Timer(3)
-        tim.init(mode=Timer.PERIODIC, freq=200, callback=self.HeartBeat)
+        tim = Timer(0)
+        tim.init(mode=Timer.PERIODIC, freq=1, callback=self.HeartBeat)
 
     def update_data(self,device,data):
         self.Connect_Data[device]['Data'] = data
