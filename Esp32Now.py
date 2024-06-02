@@ -87,7 +87,10 @@ class Host():
             rmsg = ujson.loads(msg)
             if rmsg[0] == 'BroadCast':
                 self.Connect_Data[rmsg[1]]['Mac'] = mac
-                self.e.add_peer(mac)
+                try:
+                    self.e.add_peer(mac)
+                except:
+                    pass
                 self.Connect_Data[rmsg[1]]['Status'] = True
                 file = open("Values.json","w")
                 file.write(ujson.dumps(self.Connect_Data))
