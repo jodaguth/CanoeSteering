@@ -30,7 +30,7 @@ class Peripheral():
         def pair(self):
             while True:
                 self.e.send(b'\xff\xff\xff\xff\xff\xff',ujson.dumps(('BroadCast',self.device)))
-                mac,msg = self.e.recv()
+                mac,msg = self.e.recv(1000)
                 if msg != None:
                     self.e.add_peer(mac)
                     self.console_status = True
@@ -49,7 +49,7 @@ class Peripheral():
             self.Ptime = utime.ticks_ms()                  
 
         def listen(self):
-            mac,msg = self.e.recv()
+            mac,msg = self.e.recv(1)
             if msg != None:
                 self.data = ujson.loads(msg)
                 self.Ptime = utime.ticks_ms()
@@ -82,7 +82,7 @@ class Host():
         file.close()
     
     def listen(self):
-        mac,msg = self.e.recv()
+        mac,msg = self.e.recv(1)
         if msg != None:
             rmsg = ujson.loads(msg)
             if rmsg[0] == 'BroadCast':
@@ -91,6 +91,7 @@ class Host():
                     self.e.add_peer(mac)
                 except:
                     pass
+                self.e.send(mac,ujson.dumps(('Paired','Console')))
                 self.Connect_Data[rmsg[1]]['Status'] = True
                 file = open("Values.json","w")
                 file.write(ujson.dumps(self.Connect_Data))
@@ -104,7 +105,7 @@ class Host():
             if x != 'Console':
                 if self.Connect_Data[x]['Mac'] != None:
                     if self.Connect_Data[x]['Data'] != None:
-                        self.e.send(self.Connect_Data[x]['Mac'],self.Connect_Data[x]['Data'])       
+                        self.e.send(self.Connect_Data[x]['Mac'],ujson.dumps(self.Connect_Data[x]['Data']))       
 
     def HeartBeat(self,r):
         self.send()
