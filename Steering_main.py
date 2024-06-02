@@ -12,6 +12,7 @@ stepper_target = 0
 stepper_set = 0
 esp.Connect()
 print('Run')
+c_state = False
 while True:
 
 ####### recieve data ###########################################################
@@ -31,3 +32,6 @@ while True:
     stepper_targeting = stepper_target
     stepper_motor.target_pos(stepper_targeting)
 ################################################################################
+    if esp.console_status != c_state:
+        c_state = esp.console_status
+        print(c_state)
