@@ -17,7 +17,7 @@ while True:
 ####### recieve data ###########################################################
     data = esp.Recieve()
     if data != None:
-        print(data)
+        #print(data)
         stepper_target = data[0]
         stepper_set = data[1]
 ################################################################################
@@ -34,4 +34,4 @@ while True:
 ################################################################################
     if esp.Console_Status != c_state:
         c_state = esp.Console_Status
-        print(c_state)
+        #print(c_state)
