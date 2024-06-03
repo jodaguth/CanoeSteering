@@ -19,7 +19,7 @@ while True:
     
     if s_state != esp.Steering_Status:
         s_state = esp.Steering_Status
-        print(s_state)
+        print('Steering: {0}'.format(s_state))
     if t_state != esp.Throttle_Status:
         t_state = esp.Throttle_Status
-        print(t_state)
+        print('Throttle: {0}'.format(t_state))

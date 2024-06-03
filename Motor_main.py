@@ -10,8 +10,10 @@ print('Run')
 c_state = False
 while True:
     data = esp.Recieve()
-    print(data)
     if data != None:
+        print(data)
+        if data[0] < 0:
+            data[0] = 0
         Motor.process(data)
     
     if esp.Console_Status != c_state:

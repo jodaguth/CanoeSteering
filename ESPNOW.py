@@ -14,8 +14,10 @@ class Console ():
         self.e.add_peer(b'\xff\xff\xff\xff\xff\xff')
         self.Throttle_Mac = None
         self.Throttle_Status = False
+        self.Throttle_Time = utime.time()
         self.Steering_Mac = None
         self.Steering_Status = False
+        self.Steering_Time = utime.time()
 
     def SendThrottle(self,x):
         if self.Throttle_Mac == None:
@@ -38,7 +40,12 @@ class Console ():
             if msg != None:
                 if self.Throttle_Mac == mac:
                     self.Throttle_Status = True
-            else:
+                    self.Throttle_Time = utime.time()
+                if self.Steering_Mac == mac:
+                    self.Steering_Status = True
+                    self.Steering_Time = utime.time()
+            tdiff = utime.time() - self.Throttle_Time
+            if tdiff > 2:
                 self.Throttle_Status = False
 
         if device == 'Steering':
@@ -47,16 +54,25 @@ class Console ():
             if msg1 != None:
                 if self.Steering_Mac == mac1:
                     self.Steering_Status = True
-            else:
+                    self.Steering_Time = utime.time()
+                if self.Throttle_Mac == mac1:
+                    self.Throttle_Status = True
+                    self.Throttle_Time = utime.time()
+            sdiff = utime.time() - self.Steering_Time
+            if sdiff > 2:
                 self.Steering_Status = False
-                
+
     def Pair(self,x):
         self.e.send(b'\xff\xff\xff\xff\xff\xff',ujson.dumps(('Pair',x)))
         mac,jsonmsg = self.e.recv(1)
-        if msg != None:
+        if jsonmsg != None:
             msg = ujson.loads(jsonmsg)
             if msg[1] == x:
                 self.e.add_peer(mac)
+                if x == 'Steering':
+                    self.Steering_Mac = mac
+                elif x == 'Throttle':
+                    self.Throttle_Mac = mac
                 return True
         else:
             return False
