@@ -10,7 +10,7 @@ t_state = False
 print('Run')
 Old_Time = utime.ticks_ms()
 while True:
-    if utime.ticks_dif(Old_Time,utime.ticks_ms() > 25):
+    if utime.ticks_diff(utime.ticks_ms(),Old_Time) > 25:
         if Steering.process():
             esp.SendSteering(Steering.return_data())
         if Throttle.process():
