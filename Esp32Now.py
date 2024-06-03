@@ -57,7 +57,7 @@ class Peripheral():
                 self.e.send(mac,ujson.dumps(('Recieved',self.device)))
                 return self.data
             else:
-                if utime.ticks_diff(utime.ticks_ms, self.Ptime) > 1000:
+                if utime.ticks_diff(self.Ptime, utime.ticks_ms()) > 1000:
                     self.console_status = False
                 return None
             
@@ -114,7 +114,7 @@ class Host():
 
     def Start_Coms(self):
         tim = Timer(0)
-        tim.init(mode=Timer.PERIODIC, freq=1, callback=self.HeartBeat)
+        tim.init(mode=Timer.PERIODIC, freq=10, callback=self.HeartBeat)
 
     def update_data(self,device,data):
         self.Connect_Data[device]['Data'] = data
