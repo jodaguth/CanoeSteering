@@ -1,6 +1,6 @@
 import ESPNOW
 import CanoeControl
-import utime
+import utime # type: ignore
 esp = ESPNOW.Console()
 
 Steering = CanoeControl.SteeringModule(0,1,6,-1800,1800)
