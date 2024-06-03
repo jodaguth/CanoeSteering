@@ -17,7 +17,7 @@ recv_time = utime.ticks_ms()
 while True:
 
 ####### recieve data ###########################################################
-    if utime.ticks_diff(utime.ticks_ms(),recv_time) > 25:
+    if utime.ticks_diff(utime.ticks_ms(),recv_time) > 12:
         data = esp.Recieve()
         recv_time = utime.ticks_ms()
     else:
