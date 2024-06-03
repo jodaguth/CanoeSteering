@@ -81,7 +81,7 @@ class Host():
                 self.e.add_peer(read)
         file.close()
     
-    def listen(self):
+    def listen(self,y = None):
         mac,msg = self.e.recv(1)
         if msg != None:
             rmsg = ujson.loads(msg)
@@ -99,17 +99,18 @@ class Host():
             elif rmsg[0] == 'Recieved':
                 self.Connect_Data[rmsg[1]]['Status'] = True
         else:
-            self.Connect_Data[rmsg[1]]['Status'] = False
+            if y != None:
+                self.Connect_Data[y]['Status'] = False
     def send(self):
         for x in self.Connect_Data:
             if x != 'Console':
+                self.listen()
                 if self.Connect_Data[x]['Mac'] != None:
                     if self.Connect_Data[x]['Data'] != None:
                         self.e.send(self.Connect_Data[x]['Mac'],ujson.dumps(self.Connect_Data[x]['Data']))       
-
+                        self.listen(y = x)
     def HeartBeat(self,r):
         self.send()
-        self.listen()
         utime.sleep(.2)
 
     def Start_Coms(self):
