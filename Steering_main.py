@@ -17,6 +17,7 @@ while True:
 ####### recieve data ###########################################################
     data = esp.Recieve()
     if data != None:
+        print(data)
         stepper_target = data[0]
         stepper_set = data[1]
 ################################################################################
