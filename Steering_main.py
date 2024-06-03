@@ -17,11 +17,7 @@ recv_time = utime.ticks_ms()
 while True:
 
 ####### recieve data ###########################################################
-    if utime.ticks_diff(utime.ticks_ms(),recv_time) > 12:
-        data = esp.Recieve()
-        recv_time = utime.ticks_ms()
-    else:
-        data = None
+    data = esp.Recieve()
     if data != None:
         #print(data)
         stepper_target = data[0]

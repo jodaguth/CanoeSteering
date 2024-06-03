@@ -90,7 +90,7 @@ class Peripheral():
         self.Time = utime.time() + 2
 
     def Recieve(self):
-        mac,msg = self.e.recv(1)
+        mac,msg = self.e.recv(0)
         if msg != None:
             data = ujson.loads(msg)
             if data[0] == 'Pair':
