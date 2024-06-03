@@ -19,7 +19,7 @@ class Peripheral():
             file = open("Values.json","r")
             x = file.read()
             xt = ujson.loads(x)
-            self.Connect_Data = xt[0]
+            self.Connect_Data = xt
             for x in self.Connect_Data:
                 read = self.Connect_Data[x]['Mac']
                 if read != None:
@@ -74,7 +74,7 @@ class Host():
         utime.sleep(.1)
         xt = ujson.loads(x)
         utime.sleep(.1)
-        self.Connect_Data = xt[0]
+        self.Connect_Data = xt
         for x in self.Connect_Data:
             read = self.Connect_Data[x]['Mac']
             if read != None:
@@ -98,8 +98,8 @@ class Host():
                 file.close()
             elif rmsg[0] == 'Recieved':
                 self.Connect_Data[rmsg[1]]['Status'] = True
-            else:
-                self.Connect_Data[rmsg[1]]['Status'] = False
+        else:
+            self.Connect_Data[rmsg[1]]['Status'] = False
     def send(self):
         for x in self.Connect_Data:
             if x != 'Console':
