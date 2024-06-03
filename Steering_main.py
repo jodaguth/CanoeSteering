@@ -1,7 +1,7 @@
-import Esp32Now
+import ESPNOW
 import CanoeControl
 
-esp = Esp32Now.Peripheral('Steering')
+esp = ESPNOW.Peripheral('Steering')
 
 
 stepper_motor = CanoeControl.StepperSteeringModule(0,1,3)
@@ -10,13 +10,12 @@ stepper_motor.set_device_rotations(24)
 stepper_motor.track_target()
 stepper_target = 0
 stepper_set = 0
-esp.Connect()
 print('Run')
 c_state = False
 while True:
 
 ####### recieve data ###########################################################
-    data = esp.listen()
+    data = esp.Recieve()
     if data != None:
         stepper_target = data[0]
         stepper_set = data[1]
@@ -32,6 +31,6 @@ while True:
     stepper_targeting = stepper_target
     stepper_motor.target_pos(stepper_targeting)
 ################################################################################
-    if esp.console_status != c_state:
-        c_state = esp.console_status
+    if esp.Console_Status != c_state:
+        c_state = esp.Console_Status
         print(c_state)

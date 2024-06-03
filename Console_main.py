@@ -1,23 +1,25 @@
-import Esp32Now
+import ESPNOW
 import CanoeControl
-esp = Esp32Now.Host()
+import utime
+esp = ESPNOW.Console()
 
 Steering = CanoeControl.SteeringModule(0,1,6,-1800,1800)
 Throttle = CanoeControl.ThrottleModule(3,4,-600,600)
-esp.Start_Coms()
 s_state = False
 t_state = False
 print('Run')
+Old_Time = utime.ticks_ms()
 while True:
-    if Steering.process():
-        esp.update_data('Steering',Steering.return_data())
-
-    if Throttle.process():
-        esp.update_data('Throttle',Throttle.return_data())
+    if utime.ticks_dif(Old_Time,utime.ticks_ms() > 25):
+        if Steering.process():
+            esp.SendSteering(Steering.return_data())
+        if Throttle.process():
+            esp.SendThrottle(Throttle.return_data())
+        Old_Time = utime.ticks_ms()
     
-    if s_state != esp.Connect_Data['Steering']['Status']:
-        s_state = esp.Connect_Data['Steering']['Status']
+    if s_state != esp.Steering_Status:
+        s_state = esp.Steering_Status
         print(s_state)
-    if t_state != esp.Connect_Data['Throttle']['Status']:
-        t_state = esp.Connect_Data['Throttle']['Status']
+    if t_state != esp.Throttle_Status:
+        t_state = esp.Throttle_Status
         print(t_state)

@@ -1,20 +1,19 @@
 import CanoeControl
-import Esp32Now
+import ESPNOW
 
 
 
 
-esp = Esp32Now.Peripheral('Throttle')
-esp.Connect()
+esp = ESPNOW.Peripheral('Throttle')
 Motor = CanoeControl.MotorThrottleModule(0,1,3)
 print('Run')
 c_state = False
 while True:
-    data = esp.listen()
+    data = esp.Recieve()
     if data != None:
         Motor.process(data)
     
-    if esp.console_status != c_state:
-        c_state = esp.console_status
+    if esp.Console_Status != c_state:
+        c_state = esp.Console_Status
         print(c_state) 
 
