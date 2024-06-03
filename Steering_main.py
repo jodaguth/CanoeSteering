@@ -1,5 +1,6 @@
 import ESPNOW
 import CanoeControl
+import utime # type: ignore
 
 esp = ESPNOW.Peripheral('Steering')
 
@@ -12,10 +13,15 @@ stepper_target = 0
 stepper_set = 0
 print('Run')
 c_state = False
+recv_time = utime.ticks_ms()
 while True:
 
 ####### recieve data ###########################################################
-    data = esp.Recieve()
+    if utime.ticks_diff(utime.ticks_ms(),recv_time) > 25:
+        data = esp.Recieve()
+        recv_time = utime.ticks_ms()
+    else:
+        data = None
     if data != None:
         #print(data)
         stepper_target = data[0]
